@@ -10,6 +10,8 @@ except ImportError:
                 "This library has nothing to offer you. (Could not import " +
                 "winreg module.)")
 
+import itertools
+
 
 class Regis(object):
     def __init__(self):
@@ -27,7 +29,26 @@ class Regis(object):
                           type=winreg.REG_SZ,
                           value=value)
 
+    # can't call this DEL
     def delete(self, key):
         winreg.DeleteValue(self.reg,
                            key)
 
+    def type(self, key):
+        return self.get(key)[1] or None
+
+    def exists(self, key):
+        return key in self.keys()
+
+    def keys(self):
+        while True:
+            yield self.items()[0]
+
+    def items(self):
+        try:
+            for i in itertools.count(start=0):
+                k, val, typ = winreg.EnumValue(self.reg,
+                                               i)
+                yield (k, val)
+        except WindowsError:
+            return
