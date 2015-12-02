@@ -8,13 +8,13 @@ except ImportError:
     except ImportError:
         raise Exception("Congratulations, you're not using Windows. " +
                 "This library has nothing to offer you. (Could not import " +
-                "winreg module.)")
+                "winreg or _winreg modules.)")
 
 import itertools
 
 
 class Regis(object):
-    def __init__(self):
+    def __init__(self, key="REGISDB"):
         self.reg = winreg.CreateKey(winreg.HKEY_CURRENT_USER,
                                     self.key)
 
